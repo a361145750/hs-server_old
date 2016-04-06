@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userMapper">
+
+    <!-- select 语句，传参一个，返回User对象 。注：select id as id,name as name,pwd as pwd
+        的as后面的名称要与User类中属性名称要一一对应 -->
+    <select id="getUserByLoginId" parameterType="java.util.Map" resultType="java.util.Map">
+        select *
+        from s_user
+        WHERE login_id = #{loginId,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertUser" parameterType="java.util.Map">
+        insert into s_user
+        (`login_id`, `user_name`, `pass_word`, `role`, `user_right`, `creat_by`, `creat_date`)
+        values(#{loginId,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{passWord,jdbcType=VARCHAR},#{role,jdbcType=BIGINT},#{userRight,jdbcType=BIGINT},#{userId,jdbcType=VARCHAR},now())
+    </insert>
+
+</mapper>

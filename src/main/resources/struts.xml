@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <constant name="struts.objectFactory" value="spring" />
+    <constant name="struts.i18n.encoding" value="UTF-8" />
+    <constant name="struts.i18n.reload" value="false" />
+    <constant name="struts.configuration.xml.reload" value="false" />
+    <constant name="struts.custom.i18n.resources" value="globalMessages" />
+    <constant name="struts.action.extension" value="action,," />
+    <constant name="struts.serve.static" value="true" />
+    <constant name="struts.serve.static.browserCache" value="false" />
+
+    <!-- Struts全局配置-->
+    <package name="struts-global" extends="struts-default">
+       <!--  Global 拦截器-->
+        <interceptors>
+            <interceptor-stack name="globalStack">
+                <interceptor-ref name="prepare" />
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+
+        </interceptors>
+        <default-interceptor-ref name="globalStack"></default-interceptor-ref>
+    </package>
+
+    <package name="system" extends="struts-global" namespace="/system">
+        <default-interceptor-ref name="globalStack"></default-interceptor-ref>
+        <action name="login!*" class="com.hs.system.action.UserAction" method="{1}">
+            <result name="success">/jsp/busys/main.jsp</result>
+            <result name="init">/jsp/system/login.jsp</result>
+            <result name="input">/jsp/system/login.jsp</result>
+        </action>
+        <action name="register!*" class="com.hs.system.action.UserAction" method="{1}">
+            <result name="success">/jsp/busys/main.jsp</result>
+            <result name="init">/jsp/system/register.jsp</result>
+            <result name="input">/jsp/system/register.jsp</result>
+        </action>
+    </package>
+
+    <package name="busys" extends="struts-global" namespace="/busys">
+        <default-interceptor-ref name="globalStack"></default-interceptor-ref>
+        <action name="main!*" class="com.hs.busys.action.MainAction" method="{1}">
+            <result name="customManage">/jsp/busys/customManage.jsp</result>
+            <result name="tempCustomInput">/jsp/busys/tempCustomInput.jsp</result>
+            <result name="init">/jsp/system/login.jsp</result>
+        </action>
+    </package>
+</struts>

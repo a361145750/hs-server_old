@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd ">
+
+    <bean id="placeholderConfig"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>classpath:jdbc.properties</value>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close">
+        <property name="jdbcUrl" value="${hs.url}" />
+        <property name="driverClass" value="${hs.driverClassName}" />
+        <property name="user" value="${hs.username}" />
+        <property name="password" value="${hs.password}" />
+        <property name="acquireIncrement" value="${hs.acquireIncrement}" />
+        <property name="initialPoolSize" value="${hs.initialPoolSize}" />
+        <property name="minPoolSize" value="${hs.minPoolSize}" />
+        <property name="maxPoolSize" value="${hs.maxPoolSize}" />
+        <property name="maxStatements" value="${hs.maxStatements}" />
+        <property name="numHelperThreads" value="${hs.numHelperThreads}" />
+        <property name="maxIdleTime" value="${hs.maxIdleTime}" />
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:sqlMapConfigMybatis.xml" />
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <context:component-scan base-package="com.hs">
+    </context:component-scan>
+
+</beans>
