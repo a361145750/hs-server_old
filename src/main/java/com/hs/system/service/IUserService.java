@@ -1,13 +1,11 @@
 package com.hs.system.service;
 
 import com.hs.common.model.BaseData;
-import net.sf.json.JSONArray;
+import com.hs.common.service.IBaseService;
 
 /**
  * Created by work_tl on 2016/4/5.
  */
-public interface IUserService {
-    public JSONArray getUserByLoginId(BaseData data);
-
+public interface IUserService extends IBaseService {
     public int addUser(BaseData data);
 }

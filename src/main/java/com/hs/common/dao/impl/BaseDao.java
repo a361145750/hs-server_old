@@ -1,6 +1,6 @@
 package com.hs.common.dao.impl;
 
-import com.hs.common.dao.IHsBaseDao;
+import com.hs.common.dao.IBaseDao;
 import com.hs.common.model.BaseData;
 import com.hs.util.StringUtil;
 import net.sf.json.JSONArray;
@@ -16,7 +16,7 @@ import java.util.*;
  * Created by work_tl on 2016/4/5.
  */
 @Repository
-public class HsBaseDao extends SqlSessionDaoSupport implements IHsBaseDao {
+public class BaseDao extends SqlSessionDaoSupport implements IBaseDao {
 
     @Resource
     public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory){

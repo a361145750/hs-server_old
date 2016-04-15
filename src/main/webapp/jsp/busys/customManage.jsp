@@ -10,6 +10,7 @@
 <html>
 <head><s:include value="/jsp/common/head.jsp" /></head>
 <body>
+<s:include value="/jsp/common/userHead.jsp" />
 
 </body>
 </html>

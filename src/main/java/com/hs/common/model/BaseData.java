@@ -28,6 +28,12 @@ public class BaseData {
         this.input = input;
     }
 
+    public void addInput(String key, Object value) {
+        if (input != null) {
+            input.put(key,value);
+        }
+    }
+
     public Object getOutput() {
         return output;
     }

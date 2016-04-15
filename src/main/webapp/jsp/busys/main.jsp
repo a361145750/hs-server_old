@@ -3,6 +3,7 @@
 <html>
 <head><s:include value="/jsp/common/head.jsp" /></head>
 <body>
+<s:include value="/jsp/common/userHead.jsp" />
     <table>
         <tr>
             <td><a href="/busys/main!customManage.action" >客户管理</td>
@@ -12,7 +13,7 @@
         </tr>
         <s:if test="%{#session.user.userRight == 255}">
         <tr>
-            <td><a href="/system/register!init.action" >添加管理账户</a></td>
+            <td><a href="/system/register!resInit.action" >登陆账户管理</a></td>
         </tr>
         </s:if>
     </table>

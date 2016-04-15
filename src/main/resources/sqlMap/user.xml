@@ -4,18 +4,33 @@
 
 <mapper namespace="userMapper">
 
-    <!-- select 语句，传参一个，返回User对象 。注：select id as id,name as name,pwd as pwd
-        的as后面的名称要与User类中属性名称要一一对应 -->
-    <select id="getUserByLoginId" parameterType="java.util.Map" resultType="java.util.Map">
+    <select id="queryUserByLoginId" parameterType="java.util.Map" resultType="java.util.Map">
         select *
         from s_user
-        WHERE login_id = #{loginId,jdbcType=VARCHAR}
+        where login_id = #{loginId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryUser" parameterType="java.util.Map" resultType="java.util.Map">
+        select *
+        from s_user
+        where 1=1
+        <if test="loginId!=null and loginId!=''">and login_id like concat('%',#{loginId,jdbcType=VARCHAR},'%' )</if>
     </select>
 
     <insert id="insertUser" parameterType="java.util.Map">
         insert into s_user
         (`login_id`, `user_name`, `pass_word`, `role`, `user_right`, `creat_by`, `creat_date`)
-        values(#{loginId,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{passWord,jdbcType=VARCHAR},#{role,jdbcType=BIGINT},#{userRight,jdbcType=BIGINT},#{userId,jdbcType=VARCHAR},now())
+        values(#{loginId,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{passWord,jdbcType=VARCHAR},#{role,jdbcType=BIGINT},#{userRight,jdbcType=BIGINT},#{oprateUserId,jdbcType=VARCHAR},now())
     </insert>
+
+    <update id="updateUser" parameterType="java.util.Map">
+        update s_user set login_id=#{loginId,jdbcType=VARCHAR}, user_name=#{userName,jdbcType=VARCHAR}, pass_word=#{passWord,jdbcType=VARCHAR}, role=#{role,jdbcType=BIGINT}, user_right=#{userRight,jdbcType=BIGINT}, update_by=#{oprateUserId,jdbcType=VARCHAR}, update_date=now()
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="deleteUser" parameterType="java.util.Map">
+        delete from s_user
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </delete>
 
 </mapper>

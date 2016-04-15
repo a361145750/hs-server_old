@@ -30,13 +30,15 @@
     <package name="system" extends="struts-global" namespace="/system">
         <default-interceptor-ref name="globalStack"></default-interceptor-ref>
         <action name="login!*" class="com.hs.system.action.UserAction" method="{1}">
-            <result name="success">/jsp/busys/main.jsp</result>
+            <result name="login">/jsp/busys/main.jsp</result>
+            <result name="main">/jsp/busys/main.jsp</result>
             <result name="init">/jsp/system/login.jsp</result>
             <result name="input">/jsp/system/login.jsp</result>
+            <result name="logout">/jsp/system/login.jsp</result>
         </action>
         <action name="register!*" class="com.hs.system.action.UserAction" method="{1}">
             <result name="success">/jsp/busys/main.jsp</result>
-            <result name="init">/jsp/system/register.jsp</result>
+            <result name="resInit">/jsp/system/register.jsp</result>
             <result name="input">/jsp/system/register.jsp</result>
         </action>
     </package>

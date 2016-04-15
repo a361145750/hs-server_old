@@ -3,6 +3,10 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
+    <plugins>
+        <plugin interceptor="com.hs.interceptor.PageInterceptor">
+        </plugin>
+    </plugins>
     <mappers>
         <!-- 配置sql语句文件 -->
         <mapper resource="sqlMap/user.xml" />

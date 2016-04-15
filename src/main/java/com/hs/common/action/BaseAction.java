@@ -1,6 +1,7 @@
 package com.hs.common.action;
 
 import com.hs.common.model.BaseData;
+import com.hs.common.service.IBaseService;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 import net.sf.json.JSONArray;
@@ -21,7 +22,7 @@ import java.util.Map;
 /**
  * Created by work_tl on 2016/4/5.
  */
-public class HsBaseAction extends ActionSupport implements Preparable, ServletRequestAware, ServletResponseAware, ServletContextAware,SessionAware{
+public class BaseAction extends ActionSupport implements Preparable, ServletRequestAware, ServletResponseAware, ServletContextAware,SessionAware{
 
     private BaseData baseData;
     protected ServletContext servletContext;
@@ -49,7 +50,7 @@ public class HsBaseAction extends ActionSupport implements Preparable, ServletRe
     }
 
     public void prepare() throws Exception {
-        System.out.print("HsBaseAction prepare");
+        System.out.print("BaseAction prepare");
     }
 
     public void setServletContext(ServletContext servletContext) {
@@ -108,5 +109,18 @@ public class HsBaseAction extends ActionSupport implements Preparable, ServletRe
             returnMap.put(name, value);
         }
         return  returnMap;
+    }
+
+    /** 页面数据分页查询 */
+    public void queryDataForJSONArrayPage(IBaseService baseService, String sqlName, BaseData data){
+        data.addInput("sqlType", "count");
+        JSONArray countJs = baseService.queryDataForJSONArray(sqlName, data);
+        long total = Long.valueOf(String.valueOf(countJs.getJSONObject(0).get("count")));
+        data.addInput("sqlType", "record");
+        JSONArray recordJs = baseService.queryDataForJSONArray(sqlName, data);
+        JSONObject output = new JSONObject();
+        output.put("total",total);
+        output.put("rows",recordJs);
+        data.setOutput(output);
     }
 }

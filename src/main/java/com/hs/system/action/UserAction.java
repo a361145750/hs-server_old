@@ -1,6 +1,6 @@
 package com.hs.system.action;
 
-import com.hs.common.action.HsBaseAction;
+import com.hs.common.action.BaseAction;
 import com.hs.common.model.BaseData;
 import com.hs.system.service.IUserService;
 import net.sf.json.JSONArray;
@@ -11,29 +11,29 @@ import javax.annotation.Resource;
 /**
  * Created by work_tl on 2016/4/1.
  */
-public class UserAction extends HsBaseAction {
+public class UserAction extends BaseAction {
 
     @Resource
-    private IUserService loginService;
+    private IUserService userService;
 
     public String init(){
         return "init";
     }
 
     public String resInit(){
-        return "init";
+        return "resInit";
     }
 
     public String login() throws Exception {
         BaseData data = this.getBaseData();
         String inputPass = data.getInputString("passWord");
-        loginService.getUserByLoginId(data);
+        userService.queryDataForJSONArray("userMapper.queryUserByLoginId", data);
         JSONArray outUser = data.getOutputForJSONArray();
         if(outUser!=null && outUser.size() == 1){
             String dbPass = JSONObject.fromObject(outUser.get(0)).getString("passWord");
             if(inputPass.equals(dbPass)){
                 this.session.put("user", JSONObject.fromObject(outUser.get(0)));
-                return "success";
+                return "login";
             }
             else{
                 addActionError("用户密码不正确！");
@@ -45,6 +45,20 @@ public class UserAction extends HsBaseAction {
         return "input";
     }
 
+    public String main() throws Exception{
+        if(this.session.containsKey("user")){
+            return "main";
+        }
+        return "logout";
+    }
+
+    public String logout() throws Exception{
+        if(this.session.containsKey("user")){
+            this.session.remove("user");
+        }
+        return "logout";
+    }
+
     public String register() throws Exception {
         BaseData data = this.getBaseData();
         String inputPass = data.getInputString("passWord");
@@ -53,15 +67,48 @@ public class UserAction extends HsBaseAction {
         {
             addActionError("两次输入的密码不相同！");
         }
-        data.getInput().put("userRight",127);
-        int ret = loginService.addUser(data);
-        if(ret > 0){
+        data.addInput("userRight",127);
+        int ret = userService.addUser(data);
+        if(ret == 1){
             addActionMessage("用户注册成功！");
             return "success";
+        }
+        if(ret == -1){
+            addActionError("用户已经存在！");
         }
         else{
             addActionError("添加用户失败！");
         }
         return "input";
+    }
+
+    public void getList() throws Exception{
+        BaseData data = this.getBaseData();
+        queryDataForJSONArrayPage(userService, "userMapper.queryUser", data);
+        this.flushOutput();
+    }
+
+    public void checkLoginId() throws Exception {
+        BaseData data = this.getBaseData();
+        userService.queryDataForJSONArray("userMapper.queryUserByLoginId", data);
+        this.flushOutput();
+    }
+
+    public void addUser() throws Exception {
+        BaseData data = this.getBaseData();
+        userService.insertData("userMapper.insertUser", data);
+        this.flushOutput();
+    }
+
+    public void updateUser() throws Exception {
+        BaseData data = this.getBaseData();
+        userService.updateData("userMapper.updateUser", data);
+        this.flushOutput();
+    }
+
+    public void delUser() throws Exception {
+        BaseData data = this.getBaseData();
+        userService.deleteData("userMapper.deleteUser", data);
+        this.flushOutput();
     }
 }
