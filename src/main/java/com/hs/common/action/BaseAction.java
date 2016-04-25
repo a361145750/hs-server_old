@@ -50,7 +50,7 @@ public class BaseAction extends ActionSupport implements Preparable, ServletRequ
     }
 
     public void prepare() throws Exception {
-        System.out.print("BaseAction prepare");
+//        System.out.print("BaseAction prepare");
     }
 
     public void setServletContext(ServletContext servletContext) {
@@ -115,12 +115,12 @@ public class BaseAction extends ActionSupport implements Preparable, ServletRequ
     public void queryDataForJSONArrayPage(IBaseService baseService, String sqlName, BaseData data){
         data.addInput("sqlType", "count");
         JSONArray countJs = baseService.queryDataForJSONArray(sqlName, data);
-        long total = Long.valueOf(String.valueOf(countJs.getJSONObject(0).get("count")));
+        long total = countJs!=null?Long.valueOf(String.valueOf(countJs.getJSONObject(0).get("count"))):0;
         data.addInput("sqlType", "record");
-        JSONArray recordJs = baseService.queryDataForJSONArray(sqlName, data);
+        JSONArray recordJs =baseService.queryDataForJSONArray(sqlName, data);
         JSONObject output = new JSONObject();
         output.put("total",total);
-        output.put("rows",recordJs);
+        output.put("rows", recordJs!=null?recordJs:JSONArray.fromObject("[]"));
         data.setOutput(output);
     }
 }

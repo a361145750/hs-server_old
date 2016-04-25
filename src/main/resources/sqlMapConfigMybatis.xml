@@ -10,5 +10,6 @@
     <mappers>
         <!-- 配置sql语句文件 -->
         <mapper resource="sqlMap/user.xml" />
+        <mapper resource="sqlMap/custom.xml" />
     </mappers>
 </configuration>

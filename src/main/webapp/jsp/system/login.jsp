@@ -5,6 +5,7 @@
 <body>
 <h2>欢迎使用客户管理系统！</h2>
 <s:form action="login!login" namespace="/system">
+</div>
     <table>
         <tr>
             <td class="label">用户名:</td>
@@ -15,8 +16,9 @@
             <td><input class="easyui-textbox" type="password" name="passWord" required="true" /></td>
         </tr>
         <tr><td colspan="2" align="right"><s:submit value="登陆"></s:submit></td></tr>
-        <tr><td colspan="2" align="left><s:actionerror cssStyle="color: red"></s:actionerror></td></tr>
+        <tr><td colspan="2" align="left"><s:actionerror cssStyle="color: red"></s:actionerror></td></tr>
     </table>
+</div>
 </s:form>
 </body>
 </html>

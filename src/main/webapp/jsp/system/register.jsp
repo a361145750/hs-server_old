@@ -8,6 +8,7 @@
 </head>
 <body>
     <s:include value="/jsp/common/userHead.jsp" />
+    <div>
     <table id="userDatagrid" class="easyui-datagrid" fitColumns="false" singleSelect="true" url="/system/register!getList.action"
            toolbar="#tb" pagination="true">
         <thead>
@@ -16,10 +17,10 @@
             <th field="loginId" width="150" >用户名</th>
             <th field="userName" width="150" >昵称</th>
             <th field="role" width="150" formatter="roleFormat">角色</th>
-            <th field="userRight" width="150" formatter="rightFormat">权限</th>
         </tr>
         </thead>
     </table>
+    </div>
     <div id="tb">
         <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addUser()">添加</a>
         <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
@@ -28,9 +29,9 @@
     </div>
 
     <div style="display: none">
-        <div id="editWindow" class="easyui-window" title="编辑" style="width:290px;height:205px"
+        <div id="editWindow" class="easyui-window" title="编辑" style="width:290px;height:208px"
              modal="true" closed="true">
-        <form id="editForm">
+        <form id="editForm" method="post">
         <s:hidden name="oprateUserId" id="oprateUserId" value="%{#session.user.userId}"></s:hidden>
         <s:hidden name="userId" id="userId"></s:hidden>
         <s:hidden name="userRight" id="userRight"></s:hidden>
@@ -56,7 +57,7 @@
                 <td class="label">角色:</td>
                 <td><select class="easyui-combobox" name="role" id="role"  required="true">
                     <option value="1">管理员</option>
-                    <option value="0">操作员</option>
+                    <option value="0">访客</option>
                 </select></td>
             </tr>
             <tr>
@@ -67,6 +68,23 @@
             </tr>
         </table>
         </form>
+        </div>
+    </div>
+
+
+    <div style="display: none">
+        <div id="queryWindow" class="easyui-window" title="查询" style="width:290px;height:80px"
+             modal="true" closed="true">
+            <form id="queryForm">
+                <table>
+                    <tr>
+                        <td><input class="easyui-validatebox" name="queryKey" id="queryKey" /></td>
+                        <td colspan="2" align="right">
+                            <a class="easyui-linkbutton"  href="javascript:void(0);" onclick="queryUserSubmit();"  iconCls='icon-search'>查询</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
         </div>
     </div>
 

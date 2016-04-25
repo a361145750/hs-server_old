@@ -12,6 +12,12 @@
     </param-value>
   </context-param>
 
+  <servlet>
+    <servlet-name>JspSupportServlet</servlet-name>
+    <servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
   <!-- ssh 中文过滤 -->
   <filter>
     <filter-name>characterEncoding</filter-name>
@@ -51,5 +57,10 @@
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+
 
 </web-app>

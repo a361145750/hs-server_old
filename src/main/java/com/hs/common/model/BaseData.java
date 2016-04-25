@@ -3,6 +3,7 @@ package com.hs.common.model;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,8 +30,18 @@ public class BaseData {
     }
 
     public void addInput(String key, Object value) {
-        if (input != null) {
-            input.put(key,value);
+        if (input == null) {
+            input = new HashMap();
+        }
+        input.put(key,value);
+    }
+
+    public void addInput(Map map) {
+        if (map != null) {
+            if (input == null) {
+                input = new HashMap();
+            }
+            input.putAll(map);
         }
     }
 

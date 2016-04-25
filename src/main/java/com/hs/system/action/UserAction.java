@@ -21,6 +21,7 @@ public class UserAction extends BaseAction {
     }
 
     public String resInit(){
+        httpServletRequest.setAttribute("title","登陆账户管理");
         return "resInit";
     }
 
@@ -33,6 +34,7 @@ public class UserAction extends BaseAction {
             String dbPass = JSONObject.fromObject(outUser.get(0)).getString("passWord");
             if(inputPass.equals(dbPass)){
                 this.session.put("user", JSONObject.fromObject(outUser.get(0)));
+                httpServletRequest.setAttribute("title","主页");
                 return "login";
             }
             else{
@@ -47,6 +49,7 @@ public class UserAction extends BaseAction {
 
     public String main() throws Exception{
         if(this.session.containsKey("user")){
+            httpServletRequest.setAttribute("title","主页");
             return "main";
         }
         return "logout";
@@ -71,6 +74,7 @@ public class UserAction extends BaseAction {
         int ret = userService.addUser(data);
         if(ret == 1){
             addActionMessage("用户注册成功！");
+            httpServletRequest.setAttribute("title","主页");
             return "success";
         }
         if(ret == -1){
