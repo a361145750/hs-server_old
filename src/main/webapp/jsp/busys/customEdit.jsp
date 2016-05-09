@@ -7,6 +7,8 @@
 <html>
 <head>
     <@s.include value="/jsp/common/head.jsp" />
+    <link rel="stylesheet" href="/jsp/common/webuploader-0.1.5/webuploader.css" type="text/css"></link>
+    <script type="text/javascript" src="/jsp/common/webuploader-0.1.5/webuploader.min.js"></script>
     <script type="text/javascript" src="/jsp/busys/js/customEdit.js"></script>
     <title>客户管理</title>
 </head>
@@ -117,89 +119,94 @@
     </div>
 </form>
 <div style="display: none">
-        <div id="editWindow" class="easyui-window" title="编辑" style="width:410px;height:580px"
+        <div id="editWindow" class="easyui-window" title="编辑" style="width:610px;height:580px"
              modal="true" closed="true">
-            <form id="recordForm" method="post">
+            <form id="recordForm" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="recordOUserId" id="recordOUserId" value="${(user.userId)!}" />
                 <input type="hidden" name="recordOprate" id="recordOprate" />
-                <table>
+                <input type="hidden"  name="recordId" id="recordId" />
+                <input type="hidden"  name="attch" id="attch" />
+                <table style="table-layout:fixed;">
                     <tr>
-                        <td class="label">日期:</td>
-                        <td><input class="easyui-datebox" id="oprateDate" name="oprateDate" required="required"  ${disabled}
+                        <td class="table-lable" style="width:135px;">日期:</td>
+                        <td style="width:250px;word-wrap:break-word;"><input class="easyui-datebox" id="oprateDate" name="oprateDate" required="required"  ${disabled}
                                    data-options="formatter:myformatter,parser:myparser"/></td>
                     </tr>
                     <tr>
-                        <td class="label">设计师:</td>
+                        <td class="table-lable">设计师:</td>
                         <td><input class="easyui-combobox" name="disinerId" id="disinerId" ${disabled}
                                    data-options="valueField:'id',textField:'text',url:'/jsp/common/dict/disiner.json',filter: function(q, row){return row['id'] != null && (row['id'].indexOf(q) >= 0 || row['text'].indexOf(q) >= 0);	}"/></td>
                     </tr>
                     <tr>
-                        <td class="label">操作类型:</td>
+                        <td class="table-lable">操作类型:</td>
                         <td><input class="easyui-combobox" name="disinType" id="disinType" required="required" ${disabled}
                                    data-options="valueField:'id',textField:'text',url:'/jsp/common/dict/disinType.json',filter: function(q, row){return row['id'] != null && (row['id'].indexOf(q) >= 0 || row['text'].indexOf(q) >= 0);	}"/></td>
                     </tr>
                     <tr>
-                        <td class="label">价格:</td>
+                        <td class="table-lable">价格:</td>
                         <td><input class="easyui-numberbox" name="totalFee" id="totalFee" ${disabled}/></td>
                     </tr>
                     <tr>
-                        <td class="label">头发层次:</td>
+                        <td class="table-lable">头发层次:</td>
                         <td><input class="easyui-combobox" name="hairLevel" id="hairLevel" ${disabled}
                                    data-options="valueField:'id',textField:'text',url:'/jsp/common/dict/hairLevel.json',filter: function(q, row){return row['id'] != null && (row['id'].indexOf(q) >= 0 || row['text'].indexOf(q) >= 0);	}"/></td>
                     </tr>
                     <tr>
-                        <td class="label">头发长度:</td>
+                        <td class="table-lable">头发长度:</td>
                         <td><input class="easyui-combobox" name="hairLength" id="hairLength" ${disabled}
                                    data-options="valueField:'id',textField:'text',url:'/jsp/common/dict/hairLength.json',filter: function(q, row){return row['id'] != null && (row['id'].indexOf(q) >= 0 || row['text'].indexOf(q) >= 0);	}"/></td>
                     </tr>
                     <tr>
-                        <td class="label">头发杠子:</td>
+                        <td class="table-lable">头发杠子:</td>
                         <td><input class="easyui-combobox" name="hairBar" id="hairBar" ${disabled}
                                    data-options="valueField:'id',textField:'text',url:'/jsp/common/dict/hairBar.json',filter: function(q, row){return row['id'] != null && (row['id'].indexOf(q) >= 0 || row['text'].indexOf(q) >= 0);	}"/></td>
                     </tr>
                     <tr>
-                        <td class="label">烫发品牌:</td>
+                        <td class="table-lable">烫发品牌:</td>
                         <td><input class="easyui-combobox" name="hairPermBrand" id="hairPermBrand" ${disabled}
                                    data-options="valueField:'id',textField:'text',url:'/jsp/common/dict/hairPermBrand.json',filter: function(q, row){return row['id'] != null && (row['id'].indexOf(q) >= 0 || row['text'].indexOf(q) >= 0);	}"/></td>
                     </tr>
                     <tr>
-                        <td class="label">染发品牌:</td>
+                        <td class="table-lable">染发品牌:</td>
                         <td><input class="easyui-combobox" name="hairDyeBrand" id="hairDyeBrand" ${disabled}
                                    data-options="valueField:'id',textField:'text',url:'/jsp/common/dict/hairDyeBrand.json',filter: function(q, row){return row['id'] != null && (row['id'].indexOf(q) >= 0 || row['text'].indexOf(q) >= 0);	}"/></td>
                     </tr>
                     <tr>
-                        <td class="label">护理品牌:</td>
+                        <td class="table-lable">护理品牌:</td>
                         <td><input class="easyui-combobox" name="hairCairBrand" id="hairCairBrand" ${disabled}
                                    data-options="valueField:'id',textField:'text',url:'/jsp/common/dict/hairCairBrand.json',filter: function(q, row){return row['id'] != null && (row['id'].indexOf(q) >= 0 || row['text'].indexOf(q) >= 0);	}"/></td>
                     </tr>
                     <tr>
-                        <td class="label">客人有不喜欢的<br/>卷度或颜色等:</td>
+                        <td class="table-lable">客人有不喜欢的<br/>卷度或颜色等:</td>
                         <td><input class="easyui-textbox" name="hairHateItems" id="hairHateItems" multiline="true" ${disabled}
                                    style="height:66px;width:170px;"/></td>
                     </tr>
                     <tr>
-                        <td class="label">顾客要求要点:</td>
+                        <td class="table-lable">顾客要求要点:</td>
                         <td><input class="easyui-textbox" name="customRequireItems" id="customRequireItems" multiline="true" ${disabled}
                                    style="height:66px;width:170px;"/></td>
                     </tr>
                     <tr>
-                        <td class="label">技术操作要点:</td>
+                        <td class="table-lable">技术操作要点:</td>
                         <td><input class="easyui-textbox" name="oprateNoticeItems" id="oprateNoticeItems" multiline="true" ${disabled}
                                    style="height:66px;width:170px;"/></td>
                     </tr>
                     <tr>
-                        <td class="label">图片上传:</td>
-                        <td><input class="easyui-filebox" name="imgUrl" id="imgUrl" multiple="true" ${disabled}
-                                   data-options="prompt:'请选择图片...'"/></td>
+                        <td class="table-lable">图片:</td>
+                        <td style="text-align: left;">
+                            <input class="easyui-filebox" id="file" name='file' data-options="prompt:'请选择文件...', buttonText:'选择文件', buttonAlign:'right',onChange:fileChange, accept:'image/*', multiple:'multiple'"/>
+                            <a class="easyui-linkbutton"  href="javascript:void(0);" onclick="uploadFile();"  iconCls='icon-save'>上传</a>
+                        </td>
                     </tr>
                     <tr>
-                        <td class="label">图片:</td>
-                        <td><a href="#" onclick="openImg();" name="imgUrls" id="imgUrls">图片1</a></td>
+                        <td class="table-lable"></td>
+                        <td id="imgDiv">
+                        </td>
                     </tr>
 
                     <#if disabled != "disabled">
                     <tr>
-                        <td colspan="2" align="right">
+                        <td colspan="2" align="left">
                             <a class="easyui-linkbutton"  href="javascript:void(0);" onclick="submitRecord();"  iconCls='icon-ok'>确认</a>
                             <a class="easyui-linkbutton"  href="javascript:void(0);" onclick="canRecord();"  iconCls='icon-cancel'>取消</a>
                         </td>
@@ -210,9 +217,8 @@
         </div>
     </div>
 <div style="display: none">
-    <div id="imgWindow" class="easyui-window" title="图片" style="width:410px;height:580px"
-         modal="true" closed="true">
-        <img id="img" name="img" />
+    <div id="imgWindow" class="easyui-window" modal="true" closed="true">
+        <div id="imgDiv1" name="imgDiv1"></div>
     </div>
 </div>
 </body>

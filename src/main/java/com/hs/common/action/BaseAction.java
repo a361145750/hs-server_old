@@ -34,6 +34,7 @@ public class BaseAction extends ActionSupport implements Preparable, ServletRequ
         if(baseData!=null && baseData.getOutput()!=null){
             try {
                 httpServletResponse.setCharacterEncoding("utf-8");
+                httpServletResponse.setContentType("text/html");
                 String retS = "";
                 if(JSONArray.class.isAssignableFrom(baseData.getOutput().getClass())){
                     retS = JSONArray.fromObject(baseData.getOutput()).toString();

@@ -4,7 +4,7 @@
 <head><s:include value="/jsp/common/head.jsp" /></head>
 <body>
 <h2>欢迎使用客户管理系统！</h2>
-<s:form action="login!login" namespace="/system">
+<s:form action="login!login" namespace="/system" method="post">
 </div>
     <table>
         <tr>

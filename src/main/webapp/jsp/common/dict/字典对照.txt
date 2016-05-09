@@ -1,0 +1,9 @@
+性格:character.json
+           打造回避方向:hairExclude.json
+           做发型的周期:hairFrequency.json
+           发长:hairLength.json
+           发量:hairNumber.json
+           打理方式:hairOprateType.json
+           打造方向:hairPrefer.json
+           发质:hairQuality.json
+           性别:sex.json

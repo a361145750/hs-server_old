@@ -1,0 +1,27 @@
+.table-lable{
+    width: 100px;
+    +text-align:right;
+    text-align:right;
+    text-align:right !important;
+    float:left;
+    white-space: nowrap;
+}
+.table-input{
+    width: 200px;
+    +text-align:left;
+    text-align:left;
+    text-align:left !important;
+    float:left;
+}
+
+.imgDiv1{
+    float: left;
+}
+
+.closeLayer{
+    z-index: 99;
+    position:relative; /*绝对定位*/
+    left:50px; /*位置自己看着调整，在图片上方*/
+    top:0px;
+    float: left;
+}

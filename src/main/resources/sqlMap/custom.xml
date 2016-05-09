@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="customMapper">
+    <select id="queryCustom" parameterType="java.util.Map" resultType="java.util.Map">
+        select *
+        from custom
+        where 1=1
+        <if test="customId!=null and customId!=''">and custom_id = #{customId,jdbcType=VARCHAR}</if>
+        <if test="cardId!=null and cardId!=''">and card_id = #{cardId,jdbcType=VARCHAR}</if>
+        <if test="userName!=null and userName!=''">and user_name like concat('%',#{userName,jdbcType=VARCHAR},'%' )</if>
+        <if test="phone!=null and phone!=''">and phone = #{phone,jdbcType=VARCHAR}</if>
+        <if test="weixin!=null and weixin!=''">and weixin like concat('%',#{weixin,jdbcType=VARCHAR},'%' )</if>
+        <if test="birthday!=null and birthday!=''">and birthday = #{birthday,jdbcType=VARCHAR}</if>
+        order by creat_date desc
+    </select>
+
+    <insert id="insertCustom" parameterType="java.util.Map">
+        insert into custom
+        (custom_id, card_id, user_name, sex, age, phone, job, weixin, birthday, custom_character, hair_number, hair_length, hair_quality, hair_oprate_type, hair_prefer, hair_exclude, hair_frequency, comment, creat_by, creat_date)
+        values (#{customId,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{age,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, #{weixin,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{customCharacter,jdbcType=VARCHAR}, #{hairNumber,jdbcType=VARCHAR}, #{hairLength,jdbcType=VARCHAR}, #{hairQuality,jdbcType=VARCHAR}, #{hairOprateType,jdbcType=VARCHAR}, #{hairPrefer,jdbcType=VARCHAR}, #{hairExclude,jdbcType=VARCHAR}, #{hairFrequency,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, #{oprateUserId,jdbcType=VARCHAR}, now())
+    </insert>
+
+    <update id="updateCustom" parameterType="java.util.Map">
+        update custom set card_id=#{cardId,jdbcType=VARCHAR}, user_name=#{userName,jdbcType=VARCHAR}, sex=#{sex,jdbcType=VARCHAR}, age=#{age,jdbcType=VARCHAR}, phone=#{phone,jdbcType=VARCHAR},
+        job=#{job,jdbcType=VARCHAR}, weixin=#{weixin,jdbcType=VARCHAR}, birthday=#{birthday,jdbcType=VARCHAR}, custom_character=#{customCharacter,jdbcType=VARCHAR}, hair_number=#{hairNumber,jdbcType=VARCHAR}, hair_length=#{hairLength,jdbcType=VARCHAR}, hair_quality=#{hairQuality,jdbcType=VARCHAR}, hair_oprate_type=#{hairOprateType,jdbcType=VARCHAR}, hair_prefer=#{hairPrefer,jdbcType=VARCHAR}, hair_exclude=#{hairExclude,jdbcType=VARCHAR}, hair_frequency=#{hairFrequency,jdbcType=VARCHAR}, comment=#{comment,jdbcType=VARCHAR}, update_by=#{oprateUserId,jdbcType=VARCHAR}, update_date=now()
+        where custom_id = #{customId,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="deleteCustom" parameterType="java.util.Map">
+        delete from custom
+        where custom_id = #{customId,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="queryRecord" parameterType="java.util.Map" resultType="java.util.Map">
+        select *
+        from record
+        where 1=1
+        <if test="recordId!=null and recordId!=''">and record_id = #{recordId,jdbcType=VARCHAR}</if>
+        <if test="customId!=null and customId!=''">and custom_id = #{customId,jdbcType=VARCHAR}</if>
+        order by creat_date desc
+    </select>
+
+    <insert id="insertRecord" parameterType="java.util.Map">
+        insert into record
+        (record_id, oprate_date, description, disiner_id, custom_id, total_fee, disin_type, hair_level, hair_length, hair_bar, hair_perm_brand, hair_dye_brand, hair_cair_brand, hair_hate_items, custom_require_items, oprate_notice_items, creat_by, creat_date)
+        values (#{recordId,jdbcType=VARCHAR} , #{oprateDate, jdbcType=VARCHAR}, #{description, jdbcType=VARCHAR} , #{disinerId, jdbcType=VARCHAR} , #{customId, jdbcType=VARCHAR} , #{totalFee, jdbcType=VARCHAR} , #{disinType, jdbcType=VARCHAR} , #{hairLevel, jdbcType=VARCHAR} , #{hairLength, jdbcType=VARCHAR} , #{hairBar, jdbcType=VARCHAR} , #{hairPermBrand, jdbcType=VARCHAR} , #{hairDyeBrand, jdbcType=VARCHAR} , #{hairCairBrand, jdbcType=VARCHAR} , #{hairHateItems, jdbcType=VARCHAR} , #{customRequireItems, jdbcType=VARCHAR} , #{oprateNoticeItems, jdbcType=VARCHAR} , #{recordOprateUserId, jdbcType=VARCHAR}, now())
+    </insert>
+
+    <update id="updateRecord" parameterType="java.util.Map">
+        update record set description=#{description,jdbcType=VARCHAR}, oprate_date=#{oprateDate, jdbcType=VARCHAR}, disiner_id=#{disinerId, jdbcType=VARCHAR}, total_fee=#{totalFee,jdbcType=VARCHAR}, disin_type=#{disinType,jdbcType=VARCHAR}, hair_level=#{hairLevel,jdbcType=VARCHAR}, hair_length=#{hairLength,jdbcType=VARCHAR},
+        hair_bar=#{hairBar,jdbcType=VARCHAR}, hair_perm_brand=#{hairPermBrand,jdbcType=VARCHAR}, hair_dye_brand=#{hairDyeBrand,jdbcType=VARCHAR}, hair_cair_brand=#{hairCairBrand,jdbcType=VARCHAR}, hair_hate_items=#{hairHateItems,jdbcType=VARCHAR}, custom_require_items=#{customRequireItems,jdbcType=VARCHAR}, oprate_notice_items=#{oprateNoticeItems,jdbcType=VARCHAR}, update_by=#{recordOprateUserId,jdbcType=VARCHAR}, update_date=now()
+        where record_id = #{recordId,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="deleteRecord" parameterType="java.util.Map">
+        delete from record where 1=1
+        <if test="customId==null or customId==''">and 1=2</if>
+        <if test="recordId!=null and recordId!=''">and record_id = #{recordId,jdbcType=VARCHAR}</if>
+        <if test="customId!=null and customId!=''">and custom_id = #{customId,jdbcType=VARCHAR}</if>
+    </delete>
+
+    <select id="queryRecordAttch" parameterType="java.util.Map">
+        select * from record_attch where 1=1
+        <if test="recordAttchId!=null and recordAttchId!=''">and record_attch_id = #{recordAttchId,jdbcType=VARCHAR}</if>
+        <if test="recordId!=null and recordId!=''">and record_id = #{recordId,jdbcType=VARCHAR}</if>
+        <if test="recordIds!=null and recordIds!=''">and record_id in (#{recordIds,jdbcType=VARCHAR})</if>
+        <if test="customId!=null and customId!=''">and custom_id = #{customId,jdbcType=VARCHAR}</if>
+    </select>
+
+    <insert id="insertRecordAttch" parameterType="java.util.Map">
+        insert into record_attch
+        (record_attch_id, record_id, custom_id, file_name, file_path, file_size)
+        values (#{record_attch_id,jdbcType=VARCHAR} ,#{recordId,jdbcType=VARCHAR} , #{customId, jdbcType=VARCHAR}, #{fileName, jdbcType=VARCHAR} , #{filePath, jdbcType=VARCHAR} , #{fileSize, jdbcType=VARCHAR})
+    </insert>
+
+    <delete id="deleteRecordAttch" parameterType="java.util.Map">
+        delete from record_attch where 1=1
+        <if test="recordId==null or recordId=='' or custom_id==null or custom_id==''">and 1=2</if>
+        <if test="recordAttchId!=null and recordAttchId!=''">and record_attch_id = #{recordAttchId,jdbcType=VARCHAR}</if>
+        <if test="recordId!=null and recordId!=''">and record_id = #{recordId,jdbcType=VARCHAR}</if>
+        <if test="customId!=null and customId!=''">and custom_id = #{customId,jdbcType=VARCHAR}</if>
+    </delete>
+
+</mapper>
