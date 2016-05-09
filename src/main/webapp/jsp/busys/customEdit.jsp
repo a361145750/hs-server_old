@@ -125,7 +125,8 @@
                 <input type="hidden" name="recordOUserId" id="recordOUserId" value="${(user.userId)!}" />
                 <input type="hidden" name="recordOprate" id="recordOprate" />
                 <input type="hidden"  name="recordId" id="recordId" />
-                <input type="hidden"  name="attch" id="attch" />
+                <input type="hidden"  name="attchI" id="attchI" />
+                <input type="hidden"  name="attchD" id="attchD" />
                 <table style="table-layout:fixed;">
                     <tr>
                         <td class="table-lable" style="width:135px;">日期:</td>
@@ -194,13 +195,13 @@
                     <tr>
                         <td class="table-lable">图片:</td>
                         <td style="text-align: left;">
-                            <input class="easyui-filebox" id="file" name='file' data-options="prompt:'请选择文件...', buttonText:'选择文件', buttonAlign:'right',onChange:fileChange, accept:'image/*', multiple:'multiple'"/>
-                            <a class="easyui-linkbutton"  href="javascript:void(0);" onclick="uploadFile();"  iconCls='icon-save'>上传</a>
+                            <input class="easyui-filebox" id="file" name='file'  ${disabled} data-options="prompt:'请选择文件...', buttonText:'选择文件', buttonAlign:'right',onChange:fileChange, accept:'image/*', multiple:'multiple'"/>
+                            <a class="easyui-linkbutton"  href="javascript:void(0);" onclick="uploadFile();"   ${disabled} iconCls='icon-save'>上传</a>
                         </td>
                     </tr>
                     <tr>
                         <td class="table-lable"></td>
-                        <td id="imgDiv">
+                        <td id="imgDiv"  ${disabled}>
                         </td>
                     </tr>
 

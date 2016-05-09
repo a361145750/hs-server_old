@@ -103,8 +103,25 @@ public class FileUtil {
         String recordId = data.getInputString("recordId");
         String ext = fileName.substring(fileName.lastIndexOf("."));
 
-        return  new StringBuilder(FILE_UPLOAD_PATH).append("/").append(customId).append("/").append(NumberSequenceUtil.getDateString()).append("/").append(NumberSequenceUtil.getDateString()+NumberSequenceUtil.getRadomNum()+ext).toString();
+        return  new StringBuilder(FILE_UPLOAD_PATH).append("/").append(customId).append("/").append(recordId).append("/").append(NumberSequenceUtil.getDateString()).append("/").append(NumberSequenceUtil.getTimeString()+NumberSequenceUtil.getRadomNum()+ext).toString();
 
+    }
+
+    public static void deleteAttchByCustom(BaseData data){
+        String customId = data.getInputString("customId");
+        String filePath = new StringBuilder(FILE_UPLOAD_PATH).append("/").append(customId).toString();
+        File file = new File(filePath);
+        if(!file.exists())
+            file.delete();
+    }
+
+    public static void deleteAttchByRecord(BaseData data){
+        String customId = data.getInputString("customId");
+        String recordId = data.getInputString("recordId");
+        String filePath = new StringBuilder(FILE_UPLOAD_PATH).append("/").append(customId).append("/").append(recordId).toString();
+        File file = new File(filePath);
+        if(!file.exists())
+            file.delete();
     }
 
     public static void main(String[] args) {

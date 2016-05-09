@@ -1,6 +1,8 @@
 /**
  * Created by work_tl on 2016/4/15.
  */
+var attchI={};
+var attchD={};
 
 $(document).ready(function() {
     //initCommboxData();
@@ -19,7 +21,7 @@ showDetail = function(rowData,rowIndex){
 function addRecord(){
     $("#editWindow").window("open");
     var recordOUserId = $("#recordOUserId").val();
-    $("#recordForm").form("clear");
+    clearRecordForm();
     $("#recordOUserId").val(recordOUserId);
     $("#recordOprate").val("addRecord");
     $("#editWindow").panel({title:"添加客户历史记录"});
@@ -41,12 +43,18 @@ function editRecord(){
         return;
     }
     $("#editWindow").window("open");
+    $("#editWindow").panel({title:"编辑客户历史记录"});
     var recordOUserId = $("#recordOUserId").val();
-    $("#recordForm").form("clear");
+    clearRecordForm();
     $("#recordOUserId").val(recordOUserId);
     $("#recordOprate").val("editRecord");
     $("#recordForm").form("load",row);
-    $("#editWindow").panel({title:"编辑客户历史记录"});
+    addAttchImg(row.attchs);
+}
+
+function clearRecordForm(){
+    $("#recordForm").form("clear");
+    $('#imgDiv').empty();
 }
 
 function delRecord(){
@@ -113,13 +121,16 @@ function submitRecord(){
         hairCairBrand:$('#hairCairBrand').combobox('getValue'),
         hairHateItems:$('#hairHateItems').textbox('getValue'),
         customRequireItems:$('#customRequireItems').textbox('getValue'),
-        oprateNoticeItems:$('#oprateNoticeItems').textbox('getValue')
+        oprateNoticeItems:$('#oprateNoticeItems').textbox('getValue'),
+        attchI:attchI[$("#recordId").val()]?attchI[$("#recordId").val()]:[],
+        attchD:attchD[$("#recordId").val()]?attchD[$("#recordId").val()]:[]
     };
     if($('#recordOprate').val() == 'addRecord'){
         $('#customRecordDatagrid').datagrid('appendRow',data);
     } else {
         var row = $('#customRecordDatagrid').datagrid('getSelected');
         var index = $('#customRecordDatagrid').datagrid('getRowIndex', row);
+        data.attchs = row.attchs;
         $('#customRecordDatagrid').datagrid('updateRow',{index:index,row:data});
     }
     $("#editWindow").window("close");
@@ -131,6 +142,13 @@ function canRecord(){
 
 function openImg(fileName, widthHeight, imgUrl){
     var size = widthHeight.split('x');
+    if(parseInt(size[0]) > window.innerWidth - 20){
+        size[0] = window.innerWidth - 20;
+    }
+
+    if(parseInt(size[1]) > window.innerHeight - 40){
+        size[1] = window.innerHeight - 40;
+    }
     var winW = parseInt(size[0]) + 14;
     var winH = parseInt(size[1]) + 36;
     $("#imgWindow").window({
@@ -139,6 +157,10 @@ function openImg(fileName, widthHeight, imgUrl){
         height:winH,
         modal:true
     }).window("open");
+    $("#imgWindow").parent().css('top',(window.innerHeight - winH) / 2);
+    $("#imgWindow").parent().css('left',(window.innerWidth - winW) / 2);
+    $("#imgWindow").parent().next().css('top',(window.innerHeight - winH) / 2);
+    $("#imgWindow").parent().next().css('left',(window.innerWidth - winW) / 2);
     $('#imgDiv1').empty();
     $('#imgDiv1').append('<img id = "img" name="img" src="'+imgUrl+'"  width="'+size[0]+'" height="'+size[1]+'" />');
 }
@@ -162,21 +184,105 @@ function addAttchImg(data){
     if(data && data.length> 0){
         for(var i =0;i<data.length;i++){
             $('#imgDiv').append('<div id="'+data[i].recordAttchId+'" name="'+data[i].recordAttchId+'" class="imgDiv1"  width="50" height="50"> <img class="img-square" onClick="openImg(\''+data[i].fileName+'\', \''+data[i].fileSize+'\',\''+data[i].filePath+'\')" src="'+data[i].filePath+'" width="50" height="50"> <div class="closeLayer"  onClick="deleteImg(\''+data[i].recordAttchId+'\',\''+data[i].filePath+'\')" href="#" id="deleteImg"> <img src="/jsp/common/img/close.jpg" width="10px" height="10px"> </div> </div> <div class="imgDiv1"  width="5" height="50"></div>');
-            //$('#imgDiv').append('<img id="'+data[i].recordAttchId+'" name="'+data[i].recordAttchId+'" src="'+data[i].filePath+'" width="50" height="50" onclick="openImg(\''+data[i].fileName+'\', \''+data[i].fileSize+'\', \''+data[i].filePath+'\')"/>&nbsp;');
         }
     }
 }
 
 function addAttchStr(data){
     if(data && data.length> 0){
-        var attch = $('#attch').val().split(',');
-        if(attch && attch.length>0&& attch[0] == ''){
-            attch.shift();
+        //var attch = $('#attchI').val().split(',');
+        //if(attch && attch.length>0&& attch[0] == ''){
+        //    attch.shift();
+        //}
+        //for(var i =0;i<data.length;i++){
+        //    attch.push(JSON.stringify(data[i]));
+        //    addRowAttch(data[i]);
+        //}
+        //$('#attchI').val(attch.join(","));
+
+        var attch = attchI[$("#recordId").val()];
+        if(!attch){
+            attch=[];
         }
         for(var i =0;i<data.length;i++){
             attch.push(JSON.stringify(data[i]));
+            addRowAttch(data[i]);
         }
-        $('#attch').val(attch.join(","));
+        attchI[$("#recordId").val()] = attch;
+    }
+}
+
+function delAttchStr(attchId){
+    if(attchId!=''){
+        //var find = false;
+        //var attchI = $('#attchI').val().split(',');
+        //if(attchI && attchI.length>0){
+        //    for(var i =0;i<attchI.length;i++){
+        //        if(attchI[i].recordAttchId == attchId){
+        //            attchI.slice(i,1);
+        //            delRowAttch(attchId);
+        //            find = true;
+        //            break;
+        //        }
+        //    }
+        //}
+        //$('#attchI').val(attchI.join(","));
+        //
+        //if(!find){
+        //    var attchD = $('#attchD').val().split(',');
+        //    if(attchD && attchD.length>0&& attchD[0] == ''){
+        //        attchD.shift();
+        //    }
+        //    attchD.push(attchId);
+        //    delRowAttch(attchId);
+        //    $('#attchD').val(attchD.join(","));
+
+        var find = false;
+        var attchIn = attchI[$("#recordId").val()];
+        if(attchIn && attchIn.length>0){
+            for(var i =0;i<attchIn.length;i++){
+                if(attchIn[i].recordAttchId == attchId){
+                    attchIn.splice(i,1);
+                    delRowAttch(attchId);
+                    find = true;
+                    break;
+                }
+            }
+        }
+
+        if(!find){
+            var attchDe = attchD[$("#recordId").val()];
+            if(!attchDe){
+                attchDe=[];
+            }
+            var temp = {recordAttchId:attchId};
+            attchDe.push(temp);
+            attchD[$("#recordId").val()] = attchDe;
+            delRowAttch(attchId);
+        }
+    }
+}
+
+function addRowAttch(attch){
+    var row = $("#customRecordDatagrid").datagrid("getSelected");
+    if(row){
+        if(row.attchs){
+            row.attchs[row.attchs.length] = attch;
+        }
+    }
+}
+
+function delRowAttch(attchId){
+    var row = $("#customRecordDatagrid").datagrid("getSelected");
+    if(row){
+        if(row.attchs && row.attchs.length>0){
+            for(var i =0;i<row.attchs.length;i++){
+                if(row.attchs[i].recordAttchId == attchId){
+                    row.attchs.splice(i,1);
+                    break;
+                }
+            }
+        }
     }
 }
 
@@ -185,14 +291,18 @@ function fileChange(){
 }
 
 function deleteImg(recordAttchId,filePath){
-    $.messager.confirm("Confirm","是否确定要删除？",function(r){
+    if($('#customOprate').val() == 'showCustom'){
+        return;
+    }
+    $.messager.confirm("Confirm","是否确定要删除图片？",function(r){
         if(r){
-            $('#'+recordAttchId).next().remove();
-            $('#'+recordAttchId).remove();
             $.ajax({
                 url:'/busys/custom!deleteFile.action',
                 data:{recordAttchId:recordAttchId,filePath:filePath},
                 success:function(data){
+                    $('#'+recordAttchId).next().remove();
+                    $('#'+recordAttchId).remove();
+                    delAttchStr(recordAttchId);
                 }
             });
         }

@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +88,11 @@ public class CustomActon extends BaseAction{
                 JSONObject record = records.getJSONObject(i);
                 String recordId = record.getString("recordId");
                 if(!StringUtil.isEmpty(recordId)){
-                    record.put("attchs",map.get(recordId));
+                    if( map.containsKey(recordId)){
+                        record.put("attchs",map.get(recordId));
+                    } else {
+                        record.put("attchs",new JSONArray());
+                    }
                 }
             }
         }
@@ -100,6 +105,7 @@ public class CustomActon extends BaseAction{
         JSONObject data = new JSONObject();
         data.put("customId", NumberSequenceUtil.getCustomNum());
         httpServletRequest.setAttribute("custom", data);
+        deleteUnUseFile("");
         return "newCustom";
     }
 
@@ -109,6 +115,7 @@ public class CustomActon extends BaseAction{
         BaseData data = this.getBaseData();
         customService.queryDataForJSONObject("customMapper.queryCustom", data);
         httpServletRequest.setAttribute("custom", data.getOutputForJSONObject());
+        deleteUnUseFile("");
         return "editCustom";
     }
 
@@ -153,6 +160,7 @@ public class CustomActon extends BaseAction{
     public void delCustom() throws Exception{
         BaseData data = this.getBaseData();
         customService.deleteCustom(data);
+        FileUtil.deleteAttchByCustom(data);
         this.flushOutput();
     }
 
@@ -190,8 +198,54 @@ public class CustomActon extends BaseAction{
         String filePath = baseData.getInputString("filePath");
 
         if (!StringUtil.isEmpty(filePath)) {
-                File file = new File(this.httpServletRequest.getSession().getServletContext().getRealPath("/") + filePath);
-                 file.delete();
+            File file = new File(this.httpServletRequest.getSession().getServletContext().getRealPath("/") + filePath);
+            file.delete();
+        }
+    }
+
+    public void deleteUnUseFile(String customID){
+        BaseData data = new BaseData();
+        data.addInput("", "");
+        customService.queryDataForJSONArray("customMapper.queryRecordAttch", data);
+
+        JSONArray attchArray = data.getOutputForJSONArray();
+        List<String> attchList = new ArrayList<String>();
+        if(attchArray!=null && attchArray.size() > 0){
+            for (int i = 0; i < attchArray.size(); i++) {
+                JSONObject attch = attchArray.getJSONObject(i);
+                String filePath = attch.getString("filePath");
+                attchList.add(filePath.substring(filePath.lastIndexOf("/") +1));
             }
+        }
+        List<File> fileNames = new ArrayList<File>();
+        getFiles(this.httpServletRequest.getSession().getServletContext().getRealPath("/") + FileUtil.FILE_UPLOAD_PATH, fileNames);
+        for(int i=0;i<fileNames.size();i++){
+            File file = fileNames.get(i);
+            String filePath = file.getPath();
+            if(!attchList.contains(filePath.substring(filePath.lastIndexOf("\\") +1)))
+            {
+                file.delete();
+            }
+        }
+    }
+
+    public void getFiles(String path, List<File> fileNames){
+        if(!StringUtil.isEmpty(path)){
+            if (fileNames == null) {
+                fileNames = new ArrayList<File>();
+            }
+            File oriFile = new File(path);
+            File[] files = oriFile.listFiles();
+            if (files == null) {
+                return;
+            }
+            for (File file : files) {
+                if (file.isFile()) {
+                    fileNames.add(file);
+                } else {
+                    getFiles(file.getPath(), fileNames);
+                }
+            }
+        }
     }
 }

@@ -61,7 +61,7 @@
         <if test="customId!=null and customId!=''">and custom_id = #{customId,jdbcType=VARCHAR}</if>
     </delete>
 
-    <select id="queryRecordAttch" parameterType="java.util.Map">
+    <select id="queryRecordAttch" parameterType="java.util.Map" resultType="java.util.Map">
         select * from record_attch where 1=1
         <if test="recordAttchId!=null and recordAttchId!=''">and record_attch_id = #{recordAttchId,jdbcType=VARCHAR}</if>
         <if test="recordId!=null and recordId!=''">and record_id = #{recordId,jdbcType=VARCHAR}</if>
@@ -72,12 +72,11 @@
     <insert id="insertRecordAttch" parameterType="java.util.Map">
         insert into record_attch
         (record_attch_id, record_id, custom_id, file_name, file_path, file_size)
-        values (#{record_attch_id,jdbcType=VARCHAR} ,#{recordId,jdbcType=VARCHAR} , #{customId, jdbcType=VARCHAR}, #{fileName, jdbcType=VARCHAR} , #{filePath, jdbcType=VARCHAR} , #{fileSize, jdbcType=VARCHAR})
+        values (#{recordAttchId,jdbcType=VARCHAR} ,#{recordId,jdbcType=VARCHAR} , #{customId, jdbcType=VARCHAR}, #{fileName, jdbcType=VARCHAR} , #{filePath, jdbcType=VARCHAR} , #{fileSize, jdbcType=VARCHAR})
     </insert>
 
     <delete id="deleteRecordAttch" parameterType="java.util.Map">
         delete from record_attch where 1=1
-        <if test="recordId==null or recordId=='' or custom_id==null or custom_id==''">and 1=2</if>
         <if test="recordAttchId!=null and recordAttchId!=''">and record_attch_id = #{recordAttchId,jdbcType=VARCHAR}</if>
         <if test="recordId!=null and recordId!=''">and record_id = #{recordId,jdbcType=VARCHAR}</if>
         <if test="customId!=null and customId!=''">and custom_id = #{customId,jdbcType=VARCHAR}</if>
