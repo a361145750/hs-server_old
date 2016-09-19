@@ -124,9 +124,4 @@ public class FileUtil {
             file.delete();
     }
 
-    public static void main(String[] args) {
-        copyFile("c:/i1.jpg","c:/i2.jpg");
-        System.out.println(readFile("c:/test.py"));
-    }
-
 }

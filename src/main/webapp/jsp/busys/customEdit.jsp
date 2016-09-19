@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/jsp/common/webuploader-0.1.5/webuploader.css" type="text/css"></link>
     <script type="text/javascript" src="/jsp/common/webuploader-0.1.5/webuploader.min.js"></script>
     <script type="text/javascript" src="/jsp/busys/js/customEdit.js"></script>
-    <title>客户管理</title>
+    <title>客户编辑</title>
 </head>
 <body>
 <@s.include value="/jsp/common/userHead.jsp" />

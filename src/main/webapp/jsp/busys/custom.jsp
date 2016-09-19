@@ -2,7 +2,7 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <html>
 <head>
-    <title>登录用户管理</title>
+    <title>客户管理</title>
     <s:include value="/jsp/common/head.jsp" />
     <script type="text/javascript" src="/jsp/busys/js/custom.js"></script>
 </head>

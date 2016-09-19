@@ -59,5 +59,13 @@
             <result name="tempCustomInput">/jsp/busys/tempCustomInput.jsp</result>
             <result name="init">/jsp/system/login.jsp</result>
         </action>
+        <action name="temp_custom!*" class="com.hs.busys.action.WashCustomActon" method="{1}">
+            <result name="custom">/jsp/busys/custom.jsp</result>
+            <result name="editCustom" type="freemarker">/jsp/busys/customEdit.jsp</result>
+            <result name="newCustom" type="freemarker">/jsp/busys/customEdit.jsp</result>
+            <result name="showCustom" type="freemarker">/jsp/busys/customEdit.jsp</result>
+            <result name="tempCustomInput">/jsp/busys/tempCustomInput.jsp</result>
+            <result name="init">/jsp/system/login.jsp</result>
+        </action>
     </package>
 </struts>
