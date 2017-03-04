@@ -10,4 +10,7 @@ public interface ICustomService extends IBaseService {
     public int addCustom(BaseData baseData) throws Exception;
     public int updateCustom(BaseData baseData) throws Exception;
     public int deleteCustom(BaseData baseData) throws Exception;
+    public int addRecord(BaseData baseData) throws Exception;
+    public int updateRecord(BaseData baseData) throws Exception;
+    public int deleteRecord(BaseData baseData) throws Exception;
 }

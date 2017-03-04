@@ -53,6 +53,8 @@ function queryCustomSubmit(){
         userName:$("#userName").val(),
         phone:$("#phone").val(),
         weixin:$("#weixin").val(),
+        age:$("#age").val(),
+        sex:$("#sex").combobox('getValue'),
         birthday:$("#birthday").datebox('getValue')
     };
     $("#customDatagrid").datagrid("load",queryParams);

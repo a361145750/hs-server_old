@@ -2,23 +2,25 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <html>
 <head><s:include value="/jsp/common/head.jsp" /></head>
-<body>
-<h2>欢迎使用客户管理系统！</h2>
-<s:form action="login!login" namespace="/system" method="post">
+<style>
+    .form-signin{
+        max-width: 380px;
+        padding: 15px;
+        margin: 0 auto;
+    }
+    input {
+        margin-bottom: 3px;
+    }
+</style>
+<body style="background-image: url('/jsp/system/img/bg.jpg')">
+<div class="container">
+<form class="form-signin" role="form" action="login!login.action" namespace="/system" method="post">
+    <h2>欢迎使用客户管理系统！</h2>
+    <input type="text" class="form-control" name="loginId" placeholder="用户名" required autofocus />
+    <input type="password" class="form-control" name="passWord" placeholder="密码" required />
+    <button type="submit" class="btn btn-lg btn-primary btn-block">登陆</button>
+    <s:actionerror cssStyle="color: red"></s:actionerror>
+</form>
 </div>
-    <table>
-        <tr>
-            <td class="label">用户名:</td>
-            <td><input class="easyui-textbox" name="loginId" required="true" /></td>
-        </tr>
-        <tr>
-            <td class="label">密码:</td>
-            <td><input class="easyui-textbox" type="password" name="passWord" required="true" /></td>
-        </tr>
-        <tr><td colspan="2" align="right"><s:submit value="登陆"></s:submit></td></tr>
-        <tr><td colspan="2" align="left"><s:actionerror cssStyle="color: red"></s:actionerror></td></tr>
-    </table>
-</div>
-</s:form>
 </body>
 </html>

@@ -28,6 +28,9 @@ public class CustomService extends BaseService implements ICustomService{
         if(insert!=null && insert.size() > 0){
             for (int i=0;i<insert.size();i++) {
                 JSONObject insertData = insert.getJSONObject(i);
+                if(insertData.isNullObject()){
+                    continue;
+                }
                 BaseData baseDataI = new BaseData();
                 baseDataI.addInput(insertData);
 //                baseDataI.addInput("recordId", NumberSequenceUtil.getRecordNum());
@@ -37,6 +40,9 @@ public class CustomService extends BaseService implements ICustomService{
                 if(attchI!=null && attchI.size() > 0){
                     for (int j = 0; j < attchI.size(); j++) {
                         JSONObject attch = attchI.getJSONObject(i);
+                        if(attch.isNullObject()){
+                            continue;
+                        }
                         BaseData attchDataI = new BaseData();
                         attchDataI.addInput(attch);
                         customDao.insertData("customMapper.insertRecordAttch",attchDataI);
@@ -56,6 +62,9 @@ public class CustomService extends BaseService implements ICustomService{
         if(insert!=null && insert.size() > 0){
             for (int i=0;i<insert.size();i++) {
                 JSONObject insertData = insert.getJSONObject(i);
+                if(insertData.isNullObject()){
+                    continue;
+                }
                 BaseData baseDataI = new BaseData();
                 baseDataI.addInput(insertData);
 //                baseDataI.addInput("recordId", NumberSequenceUtil.getRecordNum());
@@ -65,6 +74,9 @@ public class CustomService extends BaseService implements ICustomService{
                 if(attchI!=null && attchI.size() > 0){
                     for (int j = 0; j < attchI.size(); j++) {
                         JSONObject attch = attchI.getJSONObject(j);
+                        if(attch.isNullObject()){
+                            continue;
+                        }
                         BaseData attchDataI = new BaseData();
                         attchDataI.addInput(attch);
                         customDao.insertData("customMapper.insertRecordAttch",attchDataI);
@@ -76,6 +88,9 @@ public class CustomService extends BaseService implements ICustomService{
         if(update!=null && update.size() > 0){
             for (int i=0;i<update.size();i++) {
                 JSONObject updateData = update.getJSONObject(i);
+                if(updateData.isNullObject()){
+                    continue;
+                }
                 BaseData baseDataU = new BaseData();
                 baseDataU.addInput(updateData);
                 baseDataU.addInput("customId", customId);
@@ -84,6 +99,9 @@ public class CustomService extends BaseService implements ICustomService{
                 if(attchI!=null && attchI.size() > 0){
                     for (int j = 0; j < attchI.size(); j++) {
                         JSONObject attch = attchI.getJSONObject(j);
+                        if(attch.isNullObject()){
+                            continue;
+                        }
                         BaseData attchDataI = new BaseData();
                         attchDataI.addInput(attch);
                         customDao.insertData("customMapper.insertRecordAttch",attchDataI);
@@ -93,6 +111,9 @@ public class CustomService extends BaseService implements ICustomService{
                 if(attchD!=null && attchD.size() > 0){
                     for (int j = 0; j < attchD.size(); j++) {
                         JSONObject attch = attchD.getJSONObject(j);
+                        if(attch.isNullObject()){
+                            continue;
+                        }
                         BaseData attchDataD = new BaseData();
                         attchDataD.addInput(attch);
                         customDao.deleteData("customMapper.deleteRecordAttch",attchDataD);
@@ -104,6 +125,9 @@ public class CustomService extends BaseService implements ICustomService{
         if(delete!=null && delete.size() > 0){
             for (int i=0;i<delete.size();i++) {
                 JSONObject deleteData = delete.getJSONObject(i);
+                if(deleteData.isNullObject()){
+                    continue;
+                }
                 BaseData baseDataD = new BaseData();
                 baseDataD.addInput(deleteData);
                 baseDataD.addInput("customId", customId);
@@ -122,4 +146,60 @@ public class CustomService extends BaseService implements ICustomService{
         customDao.deleteData("customMapper.deleteRecordAttch",baseData);
         return 0;
     }
+
+    @Override
+    public int addRecord(BaseData baseData) throws Exception {
+        customDao.insertData("customMapper.insertRecord",baseData);
+        JSONArray attchI = JSONArray.fromObject(baseData.getInput().get("attchI"));
+        if(attchI!=null && attchI.size() > 0){
+            for (int j = 0; j < attchI.size(); j++) {
+                JSONObject attch = attchI.getJSONObject(j);
+                if(attch.isNullObject()){
+                    continue;
+                }
+                BaseData attchDataI = new BaseData();
+                attchDataI.addInput(attch);
+                customDao.insertData("customMapper.insertRecordAttch",attchDataI);
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public int updateRecord(BaseData baseData) throws Exception {
+        customDao.updateData("customMapper.updateRecord",baseData);
+        JSONArray attchI = JSONArray.fromObject(baseData.getInput().get("attchI"));
+        if(attchI!=null && attchI.size() > 0){
+            for (int j = 0; j < attchI.size(); j++) {
+                JSONObject attch = attchI.getJSONObject(j);
+                if(attch.isNullObject()){
+                    continue;
+                }
+                BaseData attchDataI = new BaseData();
+                attchDataI.addInput(attch);
+                customDao.insertData("customMapper.insertRecordAttch",attchDataI);
+            }
+        }
+        JSONArray attchD = JSONArray.fromObject(baseData.getInput().get("attchD"));
+        if(attchD!=null && attchD.size() > 0){
+            for (int j = 0; j < attchD.size(); j++) {
+                JSONObject attch = attchD.getJSONObject(j);
+                if(attch.isNullObject()){
+                    continue;
+                }
+                BaseData attchDataD = new BaseData();
+                attchDataD.addInput(attch);
+                customDao.deleteData("customMapper.deleteRecordAttch",attchDataD);
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public int deleteRecord(BaseData baseData) throws Exception {
+        customDao.deleteData("customMapper.deleteRecord",baseData);
+        customDao.deleteData("customMapper.deleteRecordAttch",baseData);
+        return 0;
+    }
+
 }

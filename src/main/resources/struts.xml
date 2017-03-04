@@ -42,6 +42,11 @@
             <result name="resInit">/jsp/system/register.jsp</result>
             <result name="input">/jsp/system/register.jsp</result>
         </action>
+        <action name="config!*" class="com.hs.system.action.ConfigAction" method="{1}">
+            <result name="success">/jsp/system/config.jsp</result>
+            <result name="confInit">/jsp/system/config.jsp</result>
+            <result name="input">/jsp/system/config.jsp</result>
+        </action>
     </package>
 
     <package name="busys" extends="struts-global" namespace="/busys">
@@ -53,17 +58,17 @@
         </action>
         <action name="custom!*" class="com.hs.busys.action.CustomActon" method="{1}">
             <result name="custom">/jsp/busys/custom.jsp</result>
-            <result name="editCustom" type="freemarker">/jsp/busys/customEdit.jsp</result>
-            <result name="newCustom" type="freemarker">/jsp/busys/customEdit.jsp</result>
-            <result name="showCustom" type="freemarker">/jsp/busys/customEdit.jsp</result>
+            <result name="editCustom">/jsp/busys/customEdit.jsp</result>
+            <result name="newCustom">/jsp/busys/customEdit.jsp</result>
+            <result name="showCustom">/jsp/busys/customEdit.jsp</result>
             <result name="tempCustomInput">/jsp/busys/tempCustomInput.jsp</result>
             <result name="init">/jsp/system/login.jsp</result>
         </action>
         <action name="temp_custom!*" class="com.hs.busys.action.WashCustomActon" method="{1}">
             <result name="custom">/jsp/busys/custom.jsp</result>
-            <result name="editCustom" type="freemarker">/jsp/busys/customEdit.jsp</result>
-            <result name="newCustom" type="freemarker">/jsp/busys/customEdit.jsp</result>
-            <result name="showCustom" type="freemarker">/jsp/busys/customEdit.jsp</result>
+            <result name="editCustom">/jsp/busys/customEdit.jsp</result>
+            <result name="newCustom">/jsp/busys/customEdit.jsp</result>
+            <result name="showCustom">/jsp/busys/customEdit.jsp</result>
             <result name="tempCustomInput">/jsp/busys/tempCustomInput.jsp</result>
             <result name="init">/jsp/system/login.jsp</result>
         </action>

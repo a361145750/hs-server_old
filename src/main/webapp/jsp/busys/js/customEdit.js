@@ -73,26 +73,26 @@ function delRecord(){
 }
 
 function saveCustomSubmit(){
-    var url="";
-    if($("#customOprate").val() == "newCustom"){
-        url="/busys/custom!addCustom.action";
-    } else{
-        url="/busys/custom!updateCustom.action";
-    }
     $('#customForm').form('submit',{
-        url:url,
+        url:"/busys/custom!saveCustom.action",
         onSubmit:function(param){
             if(!$("#customForm").form("validate")){
                 $.messager.alert("Warning", "页面输入信息有误，请确认后再提交！");
                 return false;
             }
-        param.insert = JSON.stringify($('#customRecordDatagrid').datagrid('getChanges','inserted'));
-        param.update = JSON.stringify($('#customRecordDatagrid').datagrid('getChanges','updated'));
-        param.delete = JSON.stringify($('#customRecordDatagrid').datagrid('getChanges','deleted'));
+        //param.insert = JSON.stringify($('#customRecordDatagrid').datagrid('getChanges','inserted'));
+        //param.update = JSON.stringify($('#customRecordDatagrid').datagrid('getChanges','updated'));
+        //param.delete = JSON.stringify($('#customRecordDatagrid').datagrid('getChanges','deleted'));
         },
         success:function(data){
-            $('#customRecordDatagrid').datagrid('acceptChanges');
-            window.close();
+            //$('#customRecordDatagrid').datagrid('acceptChanges');
+            //window.close();
+            if($("#customOprate").val() == "newCustom"){
+                //window.close();
+                location.href = '/busys/custom!editCustom.action?customId=' + $("#customId").val();
+            } else{
+                location.reload();
+            }
         }
     });
 }
@@ -106,41 +106,72 @@ function submitRecord(){
         $.messager.alert("Warning", "页面输入信息有误，请确认后再提交！");
         return false;
     }
-    var data ={
-        recordId: $("#recordId").val(),
-        recordOprateUserId: $("#recordOUserId").val(),
-        oprateDate:$('#oprateDate').datebox('getValue'),
-        disinerId:$('#disinerId').combobox('getValue'),
-        disinType:$('#disinType').combobox('getValue'),
-        totalFee:$('#totalFee').numberbox('getValue'),
-        hairLevel:$('#hairLevel').combobox('getValue'),
-        hairLength:$('#recordForm #hairLength').combobox('getValue'),
-        hairBar:$('#hairBar').combobox('getValue'),
-        hairPermBrand:$('#hairPermBrand').combobox('getValue'),
-        hairDyeBrand:$('#hairDyeBrand').combobox('getValue'),
-        hairCairBrand:$('#hairCairBrand').combobox('getValue'),
-        hairHateItems:$('#hairHateItems').textbox('getValue'),
-        customRequireItems:$('#customRequireItems').textbox('getValue'),
-        oprateNoticeItems:$('#oprateNoticeItems').textbox('getValue'),
-        attchI:attchI[$("#recordId").val()]?attchI[$("#recordId").val()]:[],
-        attchD:attchD[$("#recordId").val()]?attchD[$("#recordId").val()]:[]
-    };
-    if($('#recordOprate').val() == 'addRecord'){
-        $('#customRecordDatagrid').datagrid('appendRow',data);
-    } else {
-        var row = $('#customRecordDatagrid').datagrid('getSelected');
-        var index = $('#customRecordDatagrid').datagrid('getRowIndex', row);
-        data.attchs = row.attchs;
-        $('#customRecordDatagrid').datagrid('updateRow',{index:index,row:data});
-    }
-    $("#editWindow").window("close");
+    $.ajax({
+        async:false,
+        url:'/busys/custom!getCustom.action?customId=' + $("#customId").val(),
+        dataType : 'json',
+        success:function(data){
+            if(data && data.length == 0){
+                $.messager.alert("Warning", "请先保存客户信息！");
+            } else {
+                //var data ={
+                //    customId: $("#customId").val(),
+                //    recordId: $("#recordId").val(),
+                //    recordOprateUserId: $("#recordOUserId").val(),
+                //    oprateDate:$('#oprateDate').datebox('getValue'),
+                //    disinerId:$('#disinerId').combobox('getValue'),
+                //    disinType:$('#disinType').combobox('getValue'),
+                //    totalFee:$('#totalFee').numberbox('getValue'),
+                //    hairLevel:$('#hairLevel').combobox('getValue'),
+                //    hairLength:$('#recordForm #hairLength').combobox('getValue'),
+                //    hairBar:$('#hairBar').combobox('getValue'),
+                //    hairPermBrand:$('#hairPermBrand').combobox('getValue'),
+                //    hairDyeBrand:$('#hairDyeBrand').combobox('getValue'),
+                //    hairCairBrand:$('#hairCairBrand').combobox('getValue'),
+                //    hairHateItems:$('#hairHateItems').textbox('getValue'),
+                //    customRequireItems:$('#customRequireItems').textbox('getValue'),
+                //    oprateNoticeItems:$('#oprateNoticeItems').textbox('getValue'),
+                //    attchI:attchI[$("#recordId").val()]?attchI[$("#recordId").val()]:[],
+                //    attchD:attchD[$("#recordId").val()]?attchD[$("#recordId").val()]:[]
+                //};
+
+                //if($('#recordOprate').val() == 'addRecord'){
+                //    //$('#customRecordDatagrid').datagrid('appendRow',data);
+                //} else {
+                //    var row = $('#customRecordDatagrid').datagrid('getSelected');
+                //    var index = $('#customRecordDatagrid').datagrid('getRowIndex', row);
+                //    data.attchs = row.attchs;
+                //    //$('#customRecordDatagrid').datagrid('updateRow',{index:index,row:data});
+                //}
+                $('#recordForm').form('submit',{
+                    url:"/busys/custom!saveRecord.action",
+                    onSubmit:function(param){
+                        //param.insert = JSON.stringify($('#customRecordDatagrid').datagrid('getChanges','inserted'));
+                        //param.update = JSON.stringify($('#customRecordDatagrid').datagrid('getChanges','updated'));
+                        //param.delete = JSON.stringify($('#customRecordDatagrid').datagrid('getChanges','deleted'));
+                        param.customId = $("#customId").val();
+                        param.recordOprateUserId = $("#recordOUserId").val();
+                        param.attchI = attchI[$("#recordId").val()]?JSON.stringify(attchI[$("#recordId").val()]):'[]';
+                        param.attchD = attchD[$("#recordId").val()]?JSON.stringify(attchD[$("#recordId").val()]):'[]';
+                    },
+                    success:function(data){
+                        $('#customRecordDatagrid').datagrid('reload');
+                        attchI={};
+                        attchD={};
+                    }
+                });
+                $("#editWindow").window("close");
+            }
+        }
+    });
+
 }
 
 function canRecord(){
     $("#editWindow").window("close");
 }
 
-function openImg(fileName, widthHeight, imgUrl){
+function openImg(fileName, widthHeight,recordAttchId,filePathFull){
     var size = widthHeight.split('x');
     if(parseInt(size[0]) > window.innerWidth - 20){
         size[0] = window.innerWidth - 20;
@@ -161,8 +192,9 @@ function openImg(fileName, widthHeight, imgUrl){
     $("#imgWindow").parent().css('left',(window.innerWidth - winW) / 2);
     $("#imgWindow").parent().next().css('top',(window.innerHeight - winH) / 2);
     $("#imgWindow").parent().next().css('left',(window.innerWidth - winW) / 2);
+    $('#imgWindow').css('padding','0');
     $('#imgDiv1').empty();
-    $('#imgDiv1').append('<img id = "img" name="img" src="'+imgUrl+'"  width="'+size[0]+'" height="'+size[1]+'" />');
+    $('#imgDiv1').append('<img id = "img" name="img" src="/busys/custom!downloadFile.action?recordAttchId='+recordAttchId+'&filePathFull='+ filePathFull +'"  width="'+size[0]+'" height="'+size[1]+'" />');
 }
 
 function uploadFile(){
@@ -183,7 +215,7 @@ function uploadFile(){
 function addAttchImg(data){
     if(data && data.length> 0){
         for(var i =0;i<data.length;i++){
-            $('#imgDiv').append('<div id="'+data[i].recordAttchId+'" name="'+data[i].recordAttchId+'" class="imgDiv1"  width="50" height="50"> <img class="img-square" onClick="openImg(\''+data[i].fileName+'\', \''+data[i].fileSize+'\',\''+data[i].filePath+'\')" src="'+data[i].filePath+'" width="50" height="50"> <div class="closeLayer"  onClick="deleteImg(\''+data[i].recordAttchId+'\',\''+data[i].filePath+'\')" href="#" id="deleteImg"> <img src="/jsp/common/img/close.jpg" width="10px" height="10px"> </div> </div> <div class="imgDiv1"  width="5" height="50"></div>');
+            $('#imgDiv').append('<div id="'+data[i].recordAttchId+'" name="'+data[i].recordAttchId+'" class="imgDiv1"  width="50" height="50"> <img class="img-square" onClick="openImg(\''+data[i].fileName+'\', \''+data[i].fileSize+'\', \''+data[i].recordAttchId+'\', \''+data[i].filePathFull+'\''+')" src="/busys/custom!downloadFile.action?filePathFull='+data[i].filePathFull+ '&recordAttchId='+ data[i].recordAttchId +'" width="50" height="50"> <div class="closeLayer"  onClick="deleteImg(\''+data[i].recordAttchId+'\', \''+data[i].filePath+'\''+')" href="#" id="deleteImg"> <img src="/jsp/common/img/close.jpg" width="10px" height="10px"> </div> </div> <div class="imgDiv1"  width="5" height="50"></div>');
         }
     }
 }
@@ -205,7 +237,8 @@ function addAttchStr(data){
             attch=[];
         }
         for(var i =0;i<data.length;i++){
-            attch.push(JSON.stringify(data[i]));
+            //attch.push(JSON.stringify(data[i]));
+            attch.push(data[i]);
             addRowAttch(data[i]);
         }
         attchI[$("#recordId").val()] = attch;
@@ -326,7 +359,7 @@ function initWebuploader(){
         accept: {
             title: 'Images',
             extensions: 'gif,jpg,jpeg,bmp,png',
-            mimeTypes: 'image/*'
+            mimeTypes: 'image/jpeg,image/png,image/jpg,image/gif,image/bmp'
         }
     });
 

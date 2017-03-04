@@ -12,8 +12,10 @@ import net.sf.json.JSONObject;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +59,12 @@ public class CustomActon extends BaseAction{
     public void getList() throws Exception{
         BaseData data = this.getBaseData();
         queryDataForJSONArrayPage(customService, "customMapper.queryCustom", data);
+        this.flushOutput();
+    }
+
+    public void getCustom() throws Exception{
+        BaseData data = this.getBaseData();
+        customService.queryDataForJSONArray("customMapper.queryCustom", data);
         this.flushOutput();
     }
 
@@ -106,6 +114,7 @@ public class CustomActon extends BaseAction{
         data.put("customId", NumberSequenceUtil.getCustomNum());
         httpServletRequest.setAttribute("custom", data);
         deleteUnUseFile("");
+        httpServletRequest.setAttribute("disabled", "");
         return "newCustom";
     }
 
@@ -116,6 +125,7 @@ public class CustomActon extends BaseAction{
         customService.queryDataForJSONObject("customMapper.queryCustom", data);
         httpServletRequest.setAttribute("custom", data.getOutputForJSONObject());
         deleteUnUseFile("");
+        httpServletRequest.setAttribute("disabled", "");
         return "editCustom";
     }
 
@@ -125,7 +135,7 @@ public class CustomActon extends BaseAction{
         BaseData data = this.getBaseData();
         customService.queryDataForJSONObject("customMapper.queryCustom", data);
         httpServletRequest.setAttribute("custom", data.getOutputForJSONObject());
-        httpServletRequest.setAttribute("readOnly", data.getInputString("readOnly"));
+        httpServletRequest.setAttribute("disabled", data.getInputString("readOnly"));
         return "editCustom";
     }
 
@@ -145,15 +155,16 @@ public class CustomActon extends BaseAction{
         this.flushOutput();
     }
 
-    public void addCustom() throws Exception{
+    public void saveCustom() throws Exception{
         BaseData data = this.getBaseData();
-        customService.addCustom(data);
-        this.flushOutput();
-    }
-
-    public void updateCustom() throws Exception{
-        BaseData data = this.getBaseData();
-        customService.updateCustom(data);
+        BaseData dataQuery = new BaseData();
+        dataQuery.addInput("customId", data.getInputString("customId"));
+        customService.queryDataForJSONArray("customMapper.queryCustom", dataQuery);
+        if(JSONArray.fromObject(dataQuery.getOutput()).size() ==0){
+            customService.addCustom(data);
+        } else {
+            customService.updateCustom(data);
+        }
         this.flushOutput();
     }
 
@@ -161,6 +172,26 @@ public class CustomActon extends BaseAction{
         BaseData data = this.getBaseData();
         customService.deleteCustom(data);
         FileUtil.deleteAttchByCustom(data);
+        this.flushOutput();
+    }
+
+    public void saveRecord() throws Exception{
+        BaseData data = this.getBaseData();
+        BaseData dataQuery = new BaseData();
+        dataQuery.addInput("recordId", data.getInputString("recordId"));
+        customService.queryDataForJSONArray("customMapper.queryRecord", dataQuery);
+        if(JSONArray.fromObject(dataQuery.getOutput()).size() ==0){
+            customService.addRecord(data);
+        } else {
+            customService.updateRecord(data);
+        }
+        this.flushOutput();
+    }
+
+    public void delRecord() throws Exception{
+        BaseData data = this.getBaseData();
+        customService.deleteRecord(data);
+        FileUtil.deleteAttchByRecord(data);
         this.flushOutput();
     }
 
@@ -177,13 +208,14 @@ public class CustomActon extends BaseAction{
                 int imgHeight = bufferedImg.getHeight();
                 String fileName = this.fileFileName.get(i);
                 String attchFileName = FileUtil.creatAttchFileName(baseData, fileName);
-                FileUtil.copyFile(file.getAbsolutePath(), this.httpServletRequest.getSession().getServletContext().getRealPath("/") + attchFileName);
+                FileUtil.copyFile(file.getAbsolutePath(), FileUtil.FILE_UPLOAD_BASE_PATH + attchFileName);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("recordAttchId",NumberSequenceUtil.getAttchNum());
                 jsonObject.put("recordId",baseData.getInputString("recordId"));
                 jsonObject.put("customId",baseData.getInputString("customId"));
                 jsonObject.put("fileName",fileName);
                 jsonObject.put("filePath",attchFileName);
+                jsonObject.put("filePathFull",FileUtil.FILE_UPLOAD_BASE_PATH + attchFileName);
                 jsonObject.put("fileSize",imgWidth + "x" + imgHeight);
                 jsonArray.add(jsonObject);
             }
@@ -192,13 +224,43 @@ public class CustomActon extends BaseAction{
         this.flushOutput();
     }
 
+    public void downloadFile() throws Exception{
+        BaseData baseData = this.getBaseData();
+        String filePathFull = baseData.getInputString("filePathFull");
+        String filePath = "";
+        if(!StringUtil.isEmpty(filePathFull) && !"undefined".equals(filePathFull)){
+            filePath = filePathFull;
+        } else {
+            customService.queryDataForJSONObject("customMapper.queryRecordAttch", baseData);
+            filePath = FileUtil.FILE_UPLOAD_BASE_PATH + baseData.getOutputForJSONObject().getString("filePath");
+        }
+        if (!StringUtil.isEmpty(filePath)) {
+            File file = new File(filePath);
+            if(!file.exists()){
+               return;
+            }
+            this.httpServletResponse.reset();// 必须加，不然保存不了临时文件
+            this.httpServletResponse.setContentType("application/octet-stream");
+            this.httpServletResponse.setHeader("Content-disposition", "attachment;  filename="+ file.getName());
+            InputStream in = new BufferedInputStream(new FileInputStream(file));
+            byte[] bytes = new byte[1024];
+            int c;
+            while((c = in.read(bytes))!= -1){
+                this.httpServletResponse.getOutputStream().write(bytes, 0, c);
+            }
+            in.close();
+            this.httpServletResponse.getOutputStream().close();
+        }
+    }
+
     public void deleteFile() throws Exception{
         BaseData baseData = this.getBaseData();
-        String recordAttchId = baseData.getInputString("recordAttchId");
+//        customService.queryDataForJSONObject("customMapper.queryRecordAttch", baseData);
+//        String filePath = baseData.getOutputForJSONObject().getString("filePath");
         String filePath = baseData.getInputString("filePath");
 
         if (!StringUtil.isEmpty(filePath)) {
-            File file = new File(this.httpServletRequest.getSession().getServletContext().getRealPath("/") + filePath);
+            File file = new File(FileUtil.FILE_UPLOAD_BASE_PATH + filePath);
             file.delete();
         }
     }
@@ -218,7 +280,7 @@ public class CustomActon extends BaseAction{
             }
         }
         List<File> fileNames = new ArrayList<File>();
-        getFiles(this.httpServletRequest.getSession().getServletContext().getRealPath("/") + FileUtil.FILE_UPLOAD_PATH, fileNames);
+        getFiles(FileUtil.FILE_UPLOAD_BASE_PATH + FileUtil.FILE_UPLOAD_PATH, fileNames);
         for(int i=0;i<fileNames.size();i++){
             File file = fileNames.get(i);
             String filePath = file.getPath();

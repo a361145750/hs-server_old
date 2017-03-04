@@ -12,14 +12,16 @@ public class FileUtil {
 
     public static String DICT_PATH = "/jsp/common/dict/";
 
-    public static String FILE_UPLOAD_PATH = "/fileupload/image/";
+    public static String FILE_UPLOAD_BASE_PATH = "D:/GIT/hs-server/target";
+
+    public static String FILE_UPLOAD_PATH = "/fileupload/image";
 
     static {
         Properties pop = new Properties();
         String path = FileUtil.class.getClassLoader().getResource("/fileUpload.properties").getPath();
         try ( FileInputStream in = new FileInputStream(new File(path))){
             pop.load(in);
-            FILE_UPLOAD_PATH = pop.getProperty("imgFilePath");
+            FILE_UPLOAD_BASE_PATH = pop.getProperty("imgFilePath");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,7 +111,7 @@ public class FileUtil {
 
     public static void deleteAttchByCustom(BaseData data){
         String customId = data.getInputString("customId");
-        String filePath = new StringBuilder(FILE_UPLOAD_PATH).append("/").append(customId).toString();
+        String filePath = new StringBuilder(FILE_UPLOAD_BASE_PATH).append(FILE_UPLOAD_PATH).append("/").append(customId).toString();
         File file = new File(filePath);
         if(!file.exists())
             file.delete();
@@ -118,7 +120,7 @@ public class FileUtil {
     public static void deleteAttchByRecord(BaseData data){
         String customId = data.getInputString("customId");
         String recordId = data.getInputString("recordId");
-        String filePath = new StringBuilder(FILE_UPLOAD_PATH).append("/").append(customId).append("/").append(recordId).toString();
+        String filePath = new StringBuilder(FILE_UPLOAD_BASE_PATH).append(FILE_UPLOAD_PATH).append("/").append(customId).append("/").append(recordId).toString();
         File file = new File(filePath);
         if(!file.exists())
             file.delete();

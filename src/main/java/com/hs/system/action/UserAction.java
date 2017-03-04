@@ -56,9 +56,7 @@ public class UserAction extends BaseAction {
     }
 
     public String logout() throws Exception{
-        if(this.session.containsKey("user")){
-            this.session.remove("user");
-        }
+        this.session.clear();
         return "logout";
     }
 

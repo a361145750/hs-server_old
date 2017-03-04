@@ -1,6 +1,7 @@
 package com.hs.interceptor;
 
 import com.hs.util.ReflectUtil;
+import com.hs.util.StringUtil;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -49,9 +50,15 @@ public class PageInterceptor implements Interceptor {
             if("count".equals(parameterMap.get("sqlType"))){
                 retSql = "select count(*) as count from (" + orgSql + ") t";
             } else {
-                long page = Long.valueOf(String.valueOf(parameterMap.get("page")));
-                long rows = Long.valueOf(String.valueOf(parameterMap.get("rows")));
-                retSql = "select * from (" + orgSql + ") t limit " + (page -1)*rows +"," + rows;
+                String pageStr = String.valueOf(parameterMap.get("page"));
+                String rowsStr = String.valueOf(parameterMap.get("rows"));
+                if(StringUtil.isEmpty(pageStr) || StringUtil.isEmpty(rowsStr)){
+                    retSql = "select * from (" + orgSql + ") ";
+                } else {
+                    long page = StringUtil.isEmpty(pageStr)?1L:Long.valueOf(pageStr);
+                    long rows = StringUtil.isEmpty(rowsStr)?10L:Long.valueOf(rowsStr);
+                    retSql = "select * from (" + orgSql + ") t limit " + (page -1)*rows +"," + rows;
+                }
             }
         }
         log.debug("orgSql[" + orgSql +"]");
