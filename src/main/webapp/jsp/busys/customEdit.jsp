@@ -141,7 +141,7 @@
                             <tr>
                                 <td class="table-lable" style="width:135px;">操作类型:</td>
                                 <td><input style="width:220px;" class="easyui-combobox" name="disinType" id="disinType" required="required" ${disabled}
-                                           data-options="valueField:'confCode',textField:'confName',url:'/system/config!getConfigType.action?confType=DISIN_TYPE'"/></td>
+                                           data-options="multiple:true,valueField:'confCode',textField:'confName',url:'/system/config!getConfigType.action?confType=DISIN_TYPE'"/></td>
                             </tr>
                             <tr>
                                 <td class="table-lable" style="width:135px;">价格:</td>
@@ -150,7 +150,7 @@
                             <tr>
                                 <td class="table-lable" style="width:135px;">头发层次:</td>
                                 <td><input style="width:220px;" class="easyui-combobox" name="hairLevel" id="hairLevel" ${disabled}
-                                           data-options="valueField:'confCode',textField:'confName',url:'/system/config!getConfigType.action?confType=HAIR_LEVEL'"/></td>
+                                           data-options="multiple:true,valueField:'confCode',textField:'confName',url:'/system/config!getConfigType.action?confType=HAIR_LEVEL'"/></td>
                             </tr>
                             <tr>
                                 <td class="table-lable" style="width:135px;">头发长度:</td>
@@ -160,7 +160,7 @@
                             <tr>
                                 <td class="table-lable" style="width:135px;">头发杠子:</td>
                                 <td><input style="width:220px;" class="easyui-combobox" name="hairBar" id="hairBar" ${disabled}
-                                           data-options="valueField:'confCode',textField:'confName',url:'/system/config!getConfigType.action?confType=HAIR_BAR'"/></td>
+                                           data-options="multiple:true,valueField:'confCode',textField:'confName',url:'/system/config!getConfigType.action?confType=HAIR_BAR'"/></td>
                             </tr>
                             <tr>
                                 <td class="table-lable" style="width:135px;">烫发品牌:</td>

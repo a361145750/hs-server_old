@@ -38,25 +38,26 @@
     <select id="queryRecord" parameterType="java.util.Map" resultType="java.util.Map">
         select r.*,
         cf1.conf_name as disiner_name,
-        cf2.conf_name as disin_type_name,
-        cf3.conf_name as hair_level_name,
+        group_concat(distinct(cf2.conf_name)) as disin_type_name,
+        group_concat(distinct(cf3.conf_name)) as hair_level_name,
         cf4.conf_name as hair_length_name,
         cf5.conf_name as hair_perm_brand_name,
         cf6.conf_name as hair_dye_brand_name,
         cf7.conf_name as hair_cair_brand_name,
-        cf8.conf_name as hair_bar_name
+        group_concat(distinct(cf8.conf_name)) as hair_bar_name
         from record r
         left join conf_attr cf1 on r.disiner_id = cf1.conf_code and cf1.conf_type= 'DISINER'
-        left join conf_attr cf2 on r.disin_type = cf2.conf_code and cf2.conf_type= 'DISIN_TYPE'
-        left join conf_attr cf3 on r.hair_level = cf3.conf_code and cf3.conf_type= 'HAIR_LEVEL'
+        left join conf_attr cf2  on locate(concat(cf2.conf_code, ','),concat(r.disin_type, ',')) > 0 and cf2.conf_type = 'DISIN_TYPE'
+        left join conf_attr cf3 on locate(concat(cf3.conf_code, ','),concat(r.hair_level, ',')) > 0 and cf3.conf_type= 'HAIR_LEVEL'
         left join conf_attr cf4 on r.hair_length = cf4.conf_code and cf4.conf_type= 'HAIR_LENGTH'
         left join conf_attr cf5 on r.hair_perm_brand = cf5.conf_code and cf5.conf_type= 'HAIR_PERM_BRAND'
         left join conf_attr cf6 on r.hair_dye_brand = cf6.conf_code and cf6.conf_type= 'HAIR_DYE_BRAND'
         left join conf_attr cf7 on r.hair_cair_brand = cf7.conf_code and cf7.conf_type= 'HAIR_CAIR_BRAND'
-        left join conf_attr cf8 on r.hair_bar = cf8.conf_code and cf8.conf_type= 'HAIR_BAR'
+        left join conf_attr cf8 on locate(concat(cf8.conf_code, ','),concat(r.hair_bar, ',')) > 0 and cf8.conf_type= 'HAIR_BAR'
         where 1=1
         <if test="recordId!=null and recordId!=''">and r.record_id = #{recordId,jdbcType=VARCHAR}</if>
         <if test="customId!=null and customId!=''">and r.custom_id = #{customId,jdbcType=VARCHAR}</if>
+        group by r.record_id
         order by r.creat_date desc
     </select>
 

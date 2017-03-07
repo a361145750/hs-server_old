@@ -153,6 +153,9 @@ function submitRecord(){
                         param.recordOprateUserId = $("#recordOUserId").val();
                         param.attchI = attchI[$("#recordId").val()]?JSON.stringify(attchI[$("#recordId").val()]):'[]';
                         param.attchD = attchD[$("#recordId").val()]?JSON.stringify(attchD[$("#recordId").val()]):'[]';
+                        param.disinType = $('#disinType').combobox('getValues');
+                        param.hairLevel = $('#hairLevel').combobox('getValues');
+                        param.hairBar = $('#hairBar').combobox('getValues');
                     },
                     success:function(data){
                         $('#customRecordDatagrid').datagrid('reload');
